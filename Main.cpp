@@ -107,12 +107,12 @@ public:
     string getcategory() const { return category; }
     double getexpenses() const { return expense; }
     void showdata() const
-    {
-        cout << "Expense Amount : " << expense << endl;
+    {   cout << "\n-----------------------------\n\n";
+        cout << "Expense Amount : Rs. " << expense << endl;
         cout << "category : " << category << endl;
         cout << "Date : " << date << endl;
         cout << "Expense ID : " << id << endl;
-        cout << "-----------------------------\n\n";
+        cout << "\n-----------------------------\n\n";
     }
 
     void savefile() const
@@ -168,10 +168,20 @@ int main()
     }
     id = maxid + 1;
 
-    do
-    {
-        cout << "----Expense Tracker----\n";
-        cout << "1. Add Expense\n2. View Expenses\n3. Delete Expense\n4. Search Expense\n5. Set income\n6. Budget Status\n7. Monthly Report\n8. Exit\n";
+    while(true)
+    {   system("cls");
+cout << "\n==================================================\n";
+cout << "                 EXPENSE TRACKER                  \n";
+cout << "==================================================\n";
+cout << " 1. Add Expense\n";
+cout << " 2. View Expenses\n";
+cout << " 3. Delete Expense\n";
+cout << " 4. Search Expense\n";
+cout << " 5. Set Income\n";
+cout << " 6. Budget Status\n";
+cout << " 7. Monthly Report\n";
+cout << " 8. Exit\n";
+cout << "==================================================\n";
         cout << "Enter choice : ";
 
         while (!(cin >> choice) || (choice < 1 || choice > 8))
@@ -186,20 +196,27 @@ int main()
         case 1:
         {
             Expense E;
-            cout << "\n----Add Expense----\n";
+            cout<<"\n========================================\n";
+            cout << "           ADD EXPENSE                \n";
+            cout<<"========================================\n";
             E.adddata();
             E.setid(id++);
             Exp.push_back(E);
             E.savefile();
 
-            cout << "Stored! Size = " << Exp.size() << endl;
+            cout << "\nStored! Size = " << Exp.size() << endl;
+            cout << "\n==================================================\n";
+            cout << "        EXPENSE ADDED SUCCESSFULLY              \n";
+            cout << "==================================================\n";
+            
             break;
         }
         case 2:
         {
             double totalexpense = 0;
-            cout << "\n-----------View Expense-----------\n";
-            cout << "\n-----------------------------\n";
+            cout<<"\n========================================\n";
+            cout << "          View Expense          \n";
+            cout<<"========================================\n";
             if (Exp.empty())
             {
                 cout << "No Expenses Found!\n";
@@ -211,7 +228,8 @@ int main()
                 e.showdata();
                 totalexpense += e.getexpenses();
             }
-            cout << "Total Expense = " << totalexpense << endl;
+            cout<<"========================================\n\n";
+            cout << "Total Expense = " << totalexpense << endl<<endl;
             break;
         }
         case 3:
@@ -223,6 +241,7 @@ int main()
                 break;
             }
             bool found = false;
+            cout<<"========================================\n\n";
             cout << "Enter Expense ID to delete : ";
 
             while (!(cin >> deleteid) || deleteid <= 0)
@@ -238,7 +257,9 @@ int main()
                     found = true;
                     Exp.erase(i);
                     updatefile(Exp);
-                    cout << "\nExpense Deleted Successfuly!\n";
+                    cout << "\n==================================================\n";
+                    cout << "       EXPENSE DELETED SUCCESSFULLY             \n";
+                    cout << "==================================================\n";
                     break;
                 }
             }
@@ -265,6 +286,9 @@ int main()
                 cin.ignore(10000, '\n');
                 cout << "Enter Correct Search Id : ";
             }
+            cout << "\n==================================================\n";
+            cout << "                  SEARCH RESULT                   \n";
+            cout << "==================================================\n";
 
             for (auto i = Exp.begin(); i != Exp.end(); i++)
             {
@@ -290,6 +314,9 @@ int main()
         }
         case 6:
         {
+            cout << "\n==================================================\n";
+            cout << "                  BUDGET STATUS                   \n";
+            cout << "==================================================\n";
 
             double totalexpense = 0, income = u.getincome();
             for (const Expense &e : Exp)
@@ -297,9 +324,9 @@ int main()
                 totalexpense += e.getexpenses();
             }
             double remaining = income - totalexpense;
-            cout << "Income : " << income << endl;
-            cout << "Total Expenses : " << totalexpense << endl;
-            cout << "Remaining : " << remaining << endl;
+            cout << " Monthly Income   : Rs. " << income << endl;
+            cout << " Total Expenses   : Rs. " << totalexpense << endl;
+            cout << " Remaining Amount : Rs. " << remaining << endl;
             if (remaining < 0)
             {
                 cout << "Warning: You have exceeded your income by " << -remaining << endl;
@@ -350,9 +377,11 @@ int main()
                 }
             }
             month[0] = toupper(month[0]);
-            cout << "\n--------Monthly Report--------\n";
+           cout << "\n==================================================\n";
+           cout << "                 MONTHLY REPORT                  \n";
+           cout << "==================================================\n";
             cout << month << " " << year << endl;
-            cout << "Total Expense : " << monthlytotal;
+            cout << "Total Expense : Rs. " << monthlytotal << endl;
             cout << "\n------------------------------\n";
 
             break;
@@ -361,9 +390,10 @@ int main()
             cout << "Exitting......\n";
             return 0;
         }
-        cout << "Do you want to continue(Y/N) : ";
-        cin >> permission;
+        cout << "\nPress Enter to continue...";
+        cin.ignore(10000, '\n');
+        cin.get();
 
-    } while (permission != "n" && permission != "N");
+    } 
     cout << "Exitting......\n";
 }
