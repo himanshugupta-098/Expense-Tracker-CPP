@@ -54,8 +54,9 @@ public:
             cout << "Expense Must be Positive. Enter Again : ";
         }
 
+        cin.ignore(10000, '\n');
         cout << "Enter category : ";
-        cin >> category;
+        getline(cin, category);
         while (true)
         {
             cout << "Enter Date (DD-MM-YYYY) : ";
@@ -107,18 +108,19 @@ public:
     string getcategory() const { return category; }
     double getexpenses() const { return expense; }
     void showdata() const
-    {   cout << "\n-----------------------------\n\n";
+    {
+        cout << "\n-----------------------------\n\n";
         cout << "Expense Amount : Rs. " << expense << endl;
-        cout << "category : " << category << endl;
-        cout << "Date : " << date << endl;
-        cout << "Expense ID : " << id << endl;
+        cout << "category       : " << category << endl;
+        cout << "Date           : " << date << endl;
+        cout << "Expense ID     : " << id << endl;
         cout << "\n-----------------------------\n\n";
     }
 
     void savefile() const
     {
         ofstream fout("Expense.txt", ios::app);
-        fout << id << " " << category << " " << date << " " << expense << endl;
+        fout << id << "," << category << "," << date << "," << expense << endl;
         fout.close();
     }
     void loaddata(int id, string category, string date, double expense)
@@ -134,7 +136,7 @@ void updatefile(const vector<Expense> &Exp)
     ofstream fout("Expense.txt");
     for (const Expense &e : Exp)
     {
-        fout << e.getid() << " " << e.getcategory() << " " << e.getdate() << " " << e.getexpenses() << endl;
+        fout << e.getid() << "," << e.getcategory() << "," << e.getdate() << "," << e.getexpenses() << endl;
     }
     fout.close();
 }
@@ -150,38 +152,42 @@ int main()
     if (!fin)
     {
         cout << "No previous expense data found. Starting fresh...\n";
-        
     }
     else
     {
-        while (fin >> fileid >> filecategory >> filedate >> fileexpense)
+        string field_id, field_category, field_date, field_expense;
+
+        while (getline(fin, field_id, ',') && getline(fin, field_category, ',') && getline(fin, field_date, ',') && getline(fin, field_expense))
         {
+            int fileid = stoi(field_id);
+            double fileexpense = stod(field_expense);
+
             Expense E;
-            E.loaddata(fileid, filecategory, filedate, fileexpense);
+            E.loaddata(fileid, field_category, field_date, fileexpense);
             Exp.push_back(E);
+
             if (fileid > maxid)
-            {
                 maxid = fileid;
-            }
         }
         fin.close();
     }
     id = maxid + 1;
 
-    while(true)
-    {   system("cls");
-cout << "\n==================================================\n";
-cout << "                 EXPENSE TRACKER                  \n";
-cout << "==================================================\n";
-cout << " 1. Add Expense\n";
-cout << " 2. View Expenses\n";
-cout << " 3. Delete Expense\n";
-cout << " 4. Search Expense\n";
-cout << " 5. Set Income\n";
-cout << " 6. Budget Status\n";
-cout << " 7. Monthly Report\n";
-cout << " 8. Exit\n";
-cout << "==================================================\n";
+    while (true)
+    {
+        system("cls");
+        cout << "\n==================================================\n";
+        cout << "                 EXPENSE TRACKER                  \n";
+        cout << "==================================================\n";
+        cout << " 1. Add Expense\n";
+        cout << " 2. View Expenses\n";
+        cout << " 3. Delete Expense\n";
+        cout << " 4. Search Expense\n";
+        cout << " 5. Set Income\n";
+        cout << " 6. Budget Status\n";
+        cout << " 7. Monthly Report\n";
+        cout << " 8. Exit\n";
+        cout << "==================================================\n";
         cout << "Enter choice : ";
 
         while (!(cin >> choice) || (choice < 1 || choice > 8))
@@ -196,9 +202,9 @@ cout << "==================================================\n";
         case 1:
         {
             Expense E;
-            cout<<"\n========================================\n";
+            cout << "\n========================================\n";
             cout << "           ADD EXPENSE                \n";
-            cout<<"========================================\n";
+            cout << "========================================\n";
             E.adddata();
             E.setid(id++);
             Exp.push_back(E);
@@ -208,15 +214,15 @@ cout << "==================================================\n";
             cout << "\n==================================================\n";
             cout << "        EXPENSE ADDED SUCCESSFULLY              \n";
             cout << "==================================================\n";
-            
+
             break;
         }
         case 2:
         {
             double totalexpense = 0;
-            cout<<"\n========================================\n";
+            cout << "\n========================================\n";
             cout << "          View Expense          \n";
-            cout<<"========================================\n";
+            cout << "========================================\n";
             if (Exp.empty())
             {
                 cout << "No Expenses Found!\n";
@@ -228,8 +234,9 @@ cout << "==================================================\n";
                 e.showdata();
                 totalexpense += e.getexpenses();
             }
-            cout<<"========================================\n\n";
-            cout << "Total Expense = " << totalexpense << endl<<endl;
+            cout << "========================================\n\n";
+            cout << "Total Expense = " << totalexpense << endl
+                 << endl;
             break;
         }
         case 3:
@@ -241,7 +248,7 @@ cout << "==================================================\n";
                 break;
             }
             bool found = false;
-            cout<<"========================================\n\n";
+            cout << "========================================\n\n";
             cout << "Enter Expense ID to delete : ";
 
             while (!(cin >> deleteid) || deleteid <= 0)
@@ -376,9 +383,9 @@ cout << "==================================================\n";
                 }
             }
             month[0] = toupper(month[0]);
-           cout << "\n==================================================\n";
-           cout << "                 MONTHLY REPORT                  \n";
-           cout << "==================================================\n";
+            cout << "\n==================================================\n";
+            cout << "                 MONTHLY REPORT                  \n";
+            cout << "==================================================\n";
             cout << month << " " << year << endl;
             cout << "Total Expense : Rs. " << monthlytotal << endl;
             cout << "\n------------------------------\n";
@@ -392,7 +399,6 @@ cout << "==================================================\n";
         cout << "\nPress Enter to continue...";
         cin.ignore(10000, '\n');
         cin.get();
-
-    } 
+    }
     cout << "Exitting......\n";
 }
