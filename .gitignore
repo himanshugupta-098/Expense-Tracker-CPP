@@ -7,6 +7,17 @@
 *.o
 *.obj
 
+# Executable files
+*.exe
+*.out
+
+# VS Code settings
+.vscode/
+
+# Personal expense data files
+Expense.txt
+Income.txt
+
 # Precompiled Headers
 *.gch
 *.pch
